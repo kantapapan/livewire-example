@@ -189,14 +189,159 @@ class ShowPost extends Component
 
 ## Component Class Traits
 
+これらは、Livewireコンポーネントの追加機能のロックを解除する特性です。通常、「オプトイン」として最適と見なされる機能の場合。
+
+```php
+class ShowPost extends Component
+{
+    use WithPagination;
+}
+```
 
 
 
+| Name              | Description                                                  |
+| ----------------- | ------------------------------------------------------------ |
+| `WithPagination`  | この特性により、Laravelのストックページ付けシステムの代わりにLivewireベースのページ付けが可能になります。 [Read Docs](https://laravel-livewire.com/docs/2.x/pagination) |
+| `WithFileUploads` | この特性により、type = "file"の入力にwire：modelを追加できます。 [Read Docs](https://laravel-livewire.com/docs/2.x/file-uploads) |
 
 
 
+## Class Methods
+
+```php
+class PostForm extends Component
+{
+    public function save()
+    {
+        ...
+
+        $this->emit('post-saved');
+    }
+}
+```
+
+| Name                                                      | Description                                                  |
+| --------------------------------------------------------- | ------------------------------------------------------------ |
+| `$this->emit($eventName, ...$params)`                     | ページ上の他のコンポーネントにイベントを発行する             |
+| `$this->emit($eventName, ...$params)->up()`               | ページ上の親コンポーネントにイベントを発行します             |
+| `$this->emit($eventName, ...$params)->self()`             | このコンポーネントにのみイベントを発行する                   |
+| `$this->emit($eventName, ...$params)->to($componentName)` | 指定された名前に一致するコンポーネントにイベントを発行します |
+| `$this->dispatchBrowserEvent($eventName, ...$params)`     | このコンポーネントのルート要素からブラウザイベントをディスパッチします |
+| `$this->validate()`                                       | パブリックコンポーネントプロパティに対して$ rulesプロパティで提供される検証ルールを実行します |
+| `$this->validate($rules, $messages)`                      | パブリックプロパティに対して提供された検証ルールを実行します |
+| `$this->validateOnly($propertyName)`                      | 提供された特定のプロパティに対して$ rulesプロパティの検証を実行し、他のプロパティに対しては実行しません |
+| `$this->validateOnly($propertyName, $rules, $messages)`   | 特定のプロパティ名に対して提供された検証ルールを実行します   |
+| `$this->redirect($url)`                                   | Livewireリクエストが終了し、フロントエンドに到達したら、新しいURLにリダイレクトします |
+| `$this->redirectRoute($routeName)`                        | 特定のルート名にリダイレクトする                             |
+| `$this->skipRender()`                                     | 現在のリクエストに対して-> render（）メソッドの実行をスキップします。 （通常、パフォーマンス上の理由から） |
+| `$this->addError($name, $error)`                          | コンポーネントのエラーバッグに特定のエラー名と値を手動で追加します |
+| `$this->resetValidation()`                                | 現在保存されている検証エラーをリセットします（クリアします） |
+| `$this->fill([...$propertyData])`                         | パブリックプロパティ名を指定された値に一括で設定します       |
+| `$this->reset()`                                          | すべてのパブリックプロパティを初期（マウント前）状態にリセットします |
+| `$this->reset($field)`                                    | 特定のパブリックプロパティをマウント前の状態にリセットします |
+| `$this->reset([...$fields])`                              | 複数の特定のプロパティをリセットする                         |
+| `$this->only([...$propertyNames])`                        | 特定のプロパティ名のセットについてのみ、キー->プロパティデータの値のペアを返します |
+
+## PHP Testing Methods
+
+```php
+public function test()
+{
+    Livewire::test(ShowPost::class)
+        ->assertDontSee('bar')
+        ->set('foo', 'bar')
+        ->assertSee('bar');
+}
+```
 
 
 
+| Name                                                        |
+| ----------------------------------------------------------- |
+| `->assertSet($propertyName, $value)`                        |
+| `->assertNotSet($propertyName, $value)`                     |
+| `->assertCount($propertyName, $value)`                      |
+| `->assertPayloadSet($propertyName, $value)`                 |
+| `->assertPayloadNotSet($propertyName, $value)`              |
+| `->assertSee($string)`                                      |
+| `->assertDontSee($string)`                                  |
+| `->assertSeeHtml($string)`                                  |
+| `->assertDontSeeHtml($string)`                              |
+| `->assertSeeHtmlInOrder([$firstString, $secondString])`     |
+| `->assertSeeInOrder([$firstString, $secondString])`         |
+| `->assertEmitted($eventName)`                               |
+| `->assertNotEmitted($eventName)`                            |
+| `->assertDispatchedBrowserEvent($eventName)`                |
+| `->assertHasErrors($propertyName)`                          |
+| `->assertHasErrors($propertyName, ['required', 'min:6'])`   |
+| `->assertHasNoErrors($propertyName)`                        |
+| `->assertHasNoErrors($propertyName, ['required', 'min:6'])` |
+| `->assertRedirect()`                                        |
+| `->assertRedirect($url)`                                    |
+| `->assertViewHas($viewDataKey)`                             |
+| `->assertViewHas($viewDataKey, $expectedValue)`             |
+| `->assertViewHas($viewDataKey, function ($dataValue) {})`   |
+| `->assertViewIs('livewire.some-view-name')`                 |
+
+
+
+特定のページにコンポーネントが存在するかどうかを確認するために利用できるLaravelテスト応答ヘルパーもあります。
+
+
+
+| Name                                                 |
+| ---------------------------------------------------- |
+| `$response->assertSeeLivewire('some-component')`     |
+| `$response->assertDontSeeLivewire('some-component')` |
+
+
+
+## Artisan Commands
+
+これらは、コンポーネントの作成などの頻繁なタスクを簡単にするためにLivewireが利用できる職人のコマンドです。
+
+
+
+| Name                                           | Params                                                       | Description |
+| ---------------------------------------------- | ------------------------------------------------------------ | ----------- |
+| `artisan make:livewire`                        | Create a new component                                       |             |
+| `artisan livewire:make`                        | Create a new component                                       |             |
+| `artisan livewire:copy`                        | Copy a component                                             |             |
+| `artisan livewire:move`                        | Move a component                                             |             |
+| `artisan livewire:delete`                      | Delete a component                                           |             |
+| `artisan livewire:touch`                       | Alias for `livewire:make`                                    |             |
+| `artisan livewire:cp`                          | Alias for `livewire:copy`                                    |             |
+| `artisan livewire:mv`                          | Alias for `livewire:move`                                    |             |
+| `artisan livewire:rm`                          | Alias for `livewire:delete`                                  |             |
+| `artisan livewire:stubs`                       | Publish Livewire stubs (used in the above commands) for local modification |             |
+| `artisan livewire:publish`                     | Publish Livewire's config file to your project (`config/livewire.php`) |             |
+| `artisan livewire:publish --assets`            | Publish Livewire's config file AND its frontend assets to your project |             |
+| `artisan livewire:configure-s3-upload-cleanup` | Configure your cloud disk driver's S3 bucket to clear temporary uploads after 24 hours |             |
+
+
+
+## PHP Lifecycle Hooks
+
+これらは、PHPのLivewireによって提供されるフックであり、（コンポーネントレベルではなく）グローバルレベルでライフサイクルの発生をリッスンします。これらは、Livewireのコア機能の重要な部分を提供するために内部的に使用され、Livewireをさらに拡張するためにServiceProvidersで使用できます。
+
+```php
+Livewire::listen('component.hydrate', function ($component, $request) {
+    //
+});
+```
+
+
+
+| Name                             | Params                                   | Description                                                  |
+| -------------------------------- | ---------------------------------------- | ------------------------------------------------------------ |
+| `component.hydrate`              | `($component, $request)`                 | すべてのコンポーネントの水分補給で実行                       |
+| `component.hydrate.initial`      | `($component, $request)`                 | INITIALハイドレーションでのみ実行します（コンポーネントが最初にロードされたとき） |
+| `component.hydrate.subsequent`   | `($component, $request)`                 | 最初のコンポーネント要求の後にのみ実行します                 |
+| `component.dehydrate`            | `($component, $response)`                | すべてのコンポーネントの脱水で実行                           |
+| `component.dehydrate.initial`    | `($component, $response)`                | 最初の脱水時にのみ実行します（コンポーネントが最初にロードされたとき） |
+| `component.dehydrate.subsequent` | `($component, $response)`                | 最初のコンポーネント要求の後に脱水で実行                     |
+| `property.hydrate`               | `($name, $value, $component, $request)`  | 特定のプロパティが水和したときに実行します                   |
+| `property.dehydrate`             | `($name, $value, $component, $response)` | 特定のプロパティが脱水されたときに実行します                 |
 
 
