@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\SimpleForm;
 
 use Livewire\Component;
 
 class Input extends Component
 {
+
     public $posts;
     public $requestList;
     public $prefectures;
@@ -23,8 +24,8 @@ class Input extends Component
 
     public function mount()
     {
-        $this->requestList = config('contact.requests');
-        $this->prefectures = config('contact.prefectures');
+        $this->requestList = config('simpleform.requests');
+        $this->prefectures = config('simpleform.prefectures');
         $this->posts = session()->get('posts');
     }
 
@@ -34,7 +35,7 @@ class Input extends Component
 
         session()->put('posts', $this->posts);
 
-        return redirect()->route('confirm');
+        return redirect()->route('simple-form-confirm');
     }
 
     public function updatedPosts()
@@ -53,7 +54,7 @@ class Input extends Component
 
     public function render()
     {
-        return view('livewire.input')
-            ->layout('layouts.order');
+        return view('livewire.simple-form.input')
+            ->layout('layouts.form');
     }
 }
