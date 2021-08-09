@@ -14,6 +14,7 @@
 ■郵便番号
 {{ Arr::get($posts, 'zipcode', '-') }}
 
+
 ■都道府県
 {{ @$prefectures[ $posts['prefecture'] ] }}
 
