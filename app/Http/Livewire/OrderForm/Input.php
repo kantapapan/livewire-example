@@ -28,16 +28,18 @@ class Input extends Component
         $this->posts = session()->get('posts');
 
         $this->prefectures = config('orderform.prefectures');
-        
+
+        if (empty($this->posts["prefecture"])) {
+            $this->areas = config('orderform.areas');
+            return;
+        }
+
         if ($this->posts["prefecture"] === "1") {
             // 北海道
             $this->areas = config('orderform.hokkaido_areas');
         } else if ($this->posts["prefecture"] === "40") {
             // 福岡
             $this->areas = config('orderform.fukuoka_areas');
-        } else {
-            // その他
-            $this->areas = config('orderform.areas');
         }
     }
 
