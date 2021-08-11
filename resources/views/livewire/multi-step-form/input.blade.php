@@ -1,4 +1,4 @@
-<form wire:submit.prevent="confirm">
+<form wire:submit.prevent="input2">
 @csrf
     <div>
         <div>
@@ -23,10 +23,10 @@
                 @foreach ($requestList as $key => $request)
                 <div>
                     <label class="inline-flex items-center">
-                        <input 
+                        <input
                             wire:model="posts.request.{{$key}}"
-                            value="{{$key}}" 
-                            type="checkbox" 
+                            value="{{$key}}"
+                            type="checkbox"
                             class="form-checkbox h-5 w-5">
                         <span class="ml-2">{{$request}}</span>
                     </label>
@@ -72,7 +72,7 @@
             </div>
         </div>
     </div>
-    
+
         <div class="mt-8">
             <span class="text-sm font-bold text-gray-600 uppercase">ご希望・ご質問</span>
             <textarea
@@ -82,7 +82,7 @@
         <div class="mt-8">
             <button
                 class="w-full p-3 text-sm font-bold tracking-wide text-gray-100 uppercase bg-green-500 rounded-lg focus:outline-none focus:shadow-outline">
-                内容確認
+                次のステップへ
             </button>
         </div>
     </div>

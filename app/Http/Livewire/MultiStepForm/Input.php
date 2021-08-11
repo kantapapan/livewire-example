@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Livewire;
+namespace App\Http\Livewire\MultiStepForm;
 
 use Livewire\Component;
 
 class Input extends Component
 {
+
     public $posts;
     public $requestList;
     public $prefectures;
@@ -23,18 +24,18 @@ class Input extends Component
 
     public function mount()
     {
-        $this->requestList = config('contact.requests');
-        $this->prefectures = config('contact.prefectures');
+        $this->requestList = config('multistepform.requests');
+        $this->prefectures = config('multistepform.prefectures');
         $this->posts = session()->get('posts');
     }
 
-    public function confirm()
+    public function input2()
     {
         $this->validate();
 
         session()->put('posts', $this->posts);
 
-        return redirect()->route('confirm');
+        return redirect()->route('multi-step-form-input2');
     }
 
     public function updatedPosts()
@@ -53,7 +54,7 @@ class Input extends Component
 
     public function render()
     {
-        return view('livewire.input')
-            ->layout('layouts.order');
+        return view('livewire.multi-step-form.input')
+            ->layout('layouts.form');
     }
 }
